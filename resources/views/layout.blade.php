@@ -15,7 +15,7 @@
       <a class="p-2 text-dark" href="{{ route('posts.index') }}">Blog Posts</a>
       <a class="p-2 text-dark" href="{{ route('posts.create') }}">Add Blog Post</a>
       @guest
-      @if (Route::has('register')):
+      @if (Route::has('register'))
       <a class="p-2 text-dark" href="{{ route('register') }}">Register</a>
       @endif
       <a class="p-2 text-dark" href="{{ route('login') }}">Login</a>
