@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\BlogPost;
 use App\Http\Requests\StorePost;
+use App\User;
 //use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 
@@ -13,7 +14,7 @@ class PostController extends Controller
     public function __construct()
     {
         $this->middleware('auth')
-        ->only(['create','store','update','edit','destroy']);
+            ->only(['create', 'store', 'update', 'edit', 'destroy']);
     }
     /**
      * Display a listing of the resource.
@@ -37,7 +38,12 @@ class PostController extends Controller
         // dd(DB::getQueryLog());
         return view(
             'posts.index',
-            ['posts' => BlogPost::withCount('comments')->get()]
+            [
+                'posts' => BlogPost::latest()->withCount('comments')->get(),
+                'mostCommented' => BlogPost::mostCommented()->take(5)->get(),
+                'mostActive' => User::withMostBlogPosts()->take(5)->get(),
+                'mostActiveLastMonth' => User::withMostBlogPostsLastMonth()->take(5)->get()
+            ]
         );
     }
 
@@ -61,7 +67,7 @@ class PostController extends Controller
     public function store(StorePost $request)
     {
         $validatedData = $request->validated();
-
+        $validatedData['user_id'] = $request->user()->id;
         $blogPost = BlogPost::create($validatedData);
 
         $request->session()->flash('status', 'Blog post was created!');
@@ -78,6 +84,11 @@ class PostController extends Controller
     public function show(Request $request, $id)
     {
         //$request->session()->reflash();
+        // return view('posts.show', [
+        //     'post' => BlogPost::with(['comments' => function ($query){
+        //         return $query->latest();
+        //     }])->findOrFail($id)
+        // ]);
         return view('posts.show', [
             'post' => BlogPost::with('comments')->findOrFail($id)
         ]);
