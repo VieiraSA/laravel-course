@@ -27,12 +27,14 @@
       {{-- @cannot('delete', $post)
     <p> You can't delete this post</p>
   @endcannot --}}
-
+      @auth
       @can('update', $post)
       <a href="{{ route('posts.edit', ['post' => $post->id ])  }}" class="btn btn-primary">
         Edit
       </a>
       @endcan
+      @endauth
+      @auth
       @if (!$post->trashed())
       @can('delete', $post)
       <form method="POST" class="fm-inline" action="{{ route('posts.destroy', ['post' => $post->id ]) }}">
@@ -42,6 +44,7 @@
       </form>
       @endcan
       @endif
+      @endauth
 
       @empty
       <p>No blog posts yet!</p>
@@ -51,34 +54,31 @@
   <div class="col-4">
     <div class="container">
       <div class="row">
-        <x-card 
-        title="Most Commented">
+        <x-card title="Most Commented">
           @slot('subtitle')
-            What people are currently talking about
+          What people are currently talking about
           @endslot
           @slot('items')
-            @foreach ($mostCommented as $post)
-            <li class="list-group-item">
-              <a href="{{ route('posts.show', ['post' => $post->id]) }}">
-                {{ $post->title }}
-              </a>
-            </li>
-            @endforeach
+          @foreach ($mostCommented as $post)
+          <li class="list-group-item">
+            <a href="{{ route('posts.show', ['post' => $post->id]) }}">
+              {{ $post->title }}
+            </a>
+          </li>
+          @endforeach
           @endslot
         </x-card>
       </div>
       <div class="row mt-4">
-        <x-card 
-        title="Most Active">
+        <x-card title="Most Active">
           @slot('subtitle')
-            Writers with most posts written
+          Writers with most posts written
           @endslot
           @slot('items',collect($mostActive)->pluck('name'))
         </x-card>
       </div>
       <div class="row mt-4">
-        <x-card 
-        title="Most Active last month">
+        <x-card title="Most Active last month">
           @slot('subtitle')
           Users with most posts written in the month
           @endslot

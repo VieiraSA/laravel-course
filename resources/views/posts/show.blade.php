@@ -14,6 +14,7 @@
   Updated 
 </x-updated>
 
+<p>Current read by {{ $counter }} people</p>
 
 <h4>Comments</h4>
 
