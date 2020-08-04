@@ -21,10 +21,12 @@
 
     <h4>Comments</h4>
 
+    @include('comments._form')
+    
     @forelse($post->comments as $comment)
     <p>
       {{ $comment->content }}
-      <x-updated :date="$comment->created_at">
+      <x-updated :date="$comment->created_at" :name="$comment->user->name">
       </x-updated>
 
     </p>

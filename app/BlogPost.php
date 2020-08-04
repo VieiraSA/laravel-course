@@ -30,14 +30,20 @@ class BlogPost extends Model
     {
         return $this->belongsToMany('App\Tag')->withTimestamps()->as('tagged');
     }
-    
+
     public function scopeLatest(Builder $query)
     {
         return $query->orderBy(static::CREATED_AT, 'desc');
     }
     public function scopeMostCommented(Builder $query)
     {
-        return $query->withCount('comments')->orderBy('comments_count','desc');
+        return $query->withCount('comments')->orderBy('comments_count', 'desc');
+    }
+    public function scopeLatestWithRelations(Builder $query)
+    {
+        return $query->latest()
+            ->withCount('comments')    
+            ->with('user','tags');
     }
     public static function boot()
     {
@@ -45,13 +51,14 @@ class BlogPost extends Model
         parent::boot();
 
         //static::addGlobalScope(new LatestScope);
-     
-        static::updating(function (BlogPost $blogPost){
-            Cache::forget("blog-post-{$blogPost->id}");
+
+        static::updating(function (BlogPost $blogPost) {
+            Cache::tags(['blog-post'])->forget("blog-post-{$blogPost->id}");
         });
 
         static::deleting(function (BlogPost $blogPost) {
             $blogPost->comments()->delete();
+            Cache::tags(['blog-post'])->forget("blog-post-{$blogPost->id}");
         });
 
         static::restoring(function (BlogPost $blogPost) {
