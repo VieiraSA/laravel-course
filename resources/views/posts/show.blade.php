@@ -20,7 +20,7 @@
     </h1>
     @endif
     <p>{{ $post->content }}</p>
-    <x-updated :date="$post->created_at" :name="$post->user->name">
+    <x-updated :date="$post->created_at" :name="$post->user->name" :userId="$post->user->id">
     </x-updated>
     <x-updated :date="$post->updated_at">
       Updated
