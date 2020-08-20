@@ -43,10 +43,13 @@ class User extends Authenticatable
     {
         return $this->hasMany(BlogPost::class);
     }
-
     public function comments()
     {
-        return $this->hasMany(Comment::class);
+        return $this->hasMany('App\Comment');
+    }
+    public function commentsOn()
+    {
+        return $this->morphMany('App\Comment','commentable')->latest();
     }
 
     public function image()
