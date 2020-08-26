@@ -4,6 +4,7 @@ namespace App;
 
 use App\Scopes\DeletedAdminScope;
 use App\Scopes\LatestScope;
+use App\Traits\Taggable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -13,7 +14,7 @@ class BlogPost extends Model
 {
     //protected $table = 'blog_posts';
 
-    use SoftDeletes;
+    use SoftDeletes, Taggable;
 
     protected $fillable = ['user_id', 'title', 'content'];
 
@@ -24,11 +25,6 @@ class BlogPost extends Model
     public function user()
     {
         return $this->belongsTo('App\User');
-    }
-
-    public function tags()
-    {
-        return $this->belongsToMany('App\Tag')->withTimestamps()->as('tagged');
     }
     public function image()
     {
