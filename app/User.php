@@ -6,7 +6,6 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use App\BlogPost;
 
 class User extends Authenticatable
 {
@@ -49,12 +48,12 @@ class User extends Authenticatable
     }
     public function commentsOn()
     {
-        return $this->morphMany('App\Comment','commentable')->latest();
+        return $this->morphMany('App\Comment', 'commentable')->latest();
     }
 
     public function image()
     {
-        return $this->morphOne('App\Image','imageable');
+        return $this->morphOne('App\Image', 'imageable');
     }
 
     public function scopeWithMostBlogPosts(Builder $query)
@@ -63,10 +62,17 @@ class User extends Authenticatable
     }
     public function scopeWithMostBlogPostsLastMonth(Builder $query)
     {
-        return $query->withCount(['blogPosts' => function ( Builder $query){
+        return $query->withCount(['blogPosts' => function (Builder $query) {
             $query->whereBetween(static::CREATED_AT, [now()->subMonths(3), now()]);
         }])
-        ->has('blogPosts', '>=', 2)
-        ->orderBy('blog_posts_count', 'desc');
+            ->has('blogPosts', '>=', 2)
+            ->orderBy('blog_posts_count', 'desc');
+    }
+    public function scopeThatHasCommentedOnPost(Builder $query, BlogPost $post)
+    {
+        return $query->whereHas('comments', function ($query) use ( $post ){
+            return $query->where('commentable_id','=', $post->id)
+            ->where('commentable_type','=', BlogPost::class);
+        });
     }
 }
