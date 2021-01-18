@@ -2,7 +2,6 @@
 
 namespace App;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -11,6 +10,11 @@ class User extends Authenticatable
 {
     use Notifiable;
 
+    public const LOCALES = [
+        'pt_BR' => 'Português',
+        'en' => 'English',
+        'es' => 'Español'
+    ];
     /**
      * The attributes that are mass assignable.
      *

@@ -23,14 +23,14 @@
     <x-updated :date="$post->created_at" :name="$post->user->name" :userId="$post->user->id">
     </x-updated>
     <x-updated :date="$post->updated_at">
-      Updated
+      {{ __('Updated') }}
     </x-updated>
     <x-tags :tags="$post->tags">
     </x-tags>
 
-    <p>Current read by {{ $counter }} people</p>
+    <p>{{ trans_choice('messages.people.reading', $counter) }}</p>
 
-    <h4>Comments</h4>
+    <h4>{{ __('Comments') }}</h4>
     <x-comment-form :route="route('posts.comments.store',['post' => $post->id ])">
     </x-comment-form>
     <x-commentList :comments="$post->comments">

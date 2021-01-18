@@ -8,5 +8,5 @@
 
 </p>
 @empty
-<p>No comments yet!</p>
+<p>{{ __('No comments yet!') }}</p>
 @endforelse

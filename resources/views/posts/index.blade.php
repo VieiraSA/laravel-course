@@ -20,11 +20,8 @@
       </x-updated>
       <x-tags :tags="$post->tags">
       </x-tags>
-      @if($post->comments_count)
-      <p>{{ $post->comments_count }} comments</p>
-      @else
-      <p>No comments yet!</p>
-      @endif
+
+      {{ trans_choice('messages.comments',$post->comments_count) }}
 
       {{-- @cannot('delete', $post)
     <p> You can't delete this post</p>
@@ -32,7 +29,7 @@
       @auth
       @can('update', $post)
       <a href="{{ route('posts.edit', ['post' => $post->id ])  }}" class="btn btn-primary">
-        Edit
+      {{ __('Edit') }}
       </a>
       @endcan
       @endauth
@@ -42,14 +39,14 @@
       <form method="POST" class="fm-inline" action="{{ route('posts.destroy', ['post' => $post->id ]) }}">
         @csrf
         @method('DELETE')
-        <input type="submit" value="Delete!" class="btn btn-primary">
+        <input type="submit" value="{{ __('Delete!') }}" class="btn btn-primary">
       </form>
       @endcan
       @endif
       @endauth
 
       @empty
-      <p>No blog posts yet!</p>
+      <p>{{ __('No blog posts yet!') }}</p>
 
       @endforelse
   </div>
